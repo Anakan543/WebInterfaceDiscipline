@@ -1,0 +1,6 @@
+@laborotorna6_HostAddress = http://localhost:5064
+
+GET {{laborotorna6_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
