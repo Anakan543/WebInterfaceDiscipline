@@ -1,6 +1,7 @@
 ﻿using Laborotorna7.Models;
 using Laborotorna7.Service;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Laborotorna7.Controllers
 {
@@ -15,14 +16,28 @@ namespace Laborotorna7.Controllers
             _userService = userService;
         }
 
-        [HttpGet(Name = "GetAllUsers")]
+        [HttpGet("GetAllUsers", Name = "GetAllUsers")]
+        [SwaggerOperation(
+            Summary = "Отримати всіх користувачів",
+            Description = "Повертає список усіх наявних користувачів"
+        )]
+        [SwaggerResponse(200, "Список користувачів успішно повернено", typeof(List<User>))]
+        [SwaggerResponse(500, "Внутрішня помилка сервера")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userService.GetUsers();
             return Ok(users);
         }
 
-        [HttpPost(Name = "CreateUser")]
+        [HttpPost("CreateUser", Name = "CreateUser")]
+        [SwaggerOperation(
+            Summary = "Створити нового користувача",
+            Description = "Створює нового користувача на основі переданих даних"
+        )]
+        [SwaggerResponse(200, "Користувач успішно створений", typeof(User))]
+        [SwaggerResponse(400, "Передано порожній параметр")]
+        [SwaggerResponse(404, "Користувача не знайдений")]
+        [SwaggerResponse(500, "Внутрішня помилка сервера")]
         public async Task<IActionResult> CreateUser([FromBody] User user)
         {
             if (user == null)
@@ -32,7 +47,15 @@ namespace Laborotorna7.Controllers
             return Ok(createdUser);
         }
 
-        [HttpPut(Name = "UpdateUser")]
+        [HttpPut("UpdateUser", Name = "UpdateUser")]
+        [SwaggerOperation(
+            Summary = "Оновити користувача",
+            Description = "Оновлює дані існуючого користувача за його нікнеймом"
+        )]
+        [SwaggerResponse(200, "Користувач успішно оновлений", typeof(User))]
+        [SwaggerResponse(400, "Передано порожній параметр")]
+        [SwaggerResponse(404, "Користувача не знайдено")]
+        [SwaggerResponse(500, "Внутрішня помилка сервера")]
         public async Task<IActionResult> UpdateUser(string nickName, [FromBody] User user)
         {
             var updatedUser = await _userService.UpdateUser(nickName, user);
@@ -42,7 +65,15 @@ namespace Laborotorna7.Controllers
             return Ok(updatedUser);
         }
 
-        [HttpDelete(Name = "DeleteUser")]
+        [HttpDelete("DeleteUser", Name = "DeleteUser")]
+        [SwaggerOperation(
+            Summary = "Видалити користувача",
+            Description = "Видаляє користувача за його нікнеймом"
+        )]
+        [SwaggerResponse(200, "Користувач успішно видалений", typeof(string))]
+        [SwaggerResponse(400, "Передано порожній параметр")]
+        [SwaggerResponse(404, "Користувача не знайдено")]
+        [SwaggerResponse(500, "Внутрішня помилка сервера")]
         public async Task<IActionResult> DeleteUser(string nickName)
         {
             var result = await _userService.DeleteUser(nickName);
