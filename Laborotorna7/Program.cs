@@ -1,5 +1,6 @@
 
 using Laborotorna7.Service;
+using Microsoft.OpenApi.Models;
 
 namespace Laborotorna7
 {
@@ -15,9 +16,22 @@ namespace Laborotorna7
 
             builder.Services.AddScoped<IStoreProdictService, StoreProductsService>();//додавання інтерфейсу та сервісу для StoreProducts
             builder.Services.AddScoped<IUserService, UserService>(); 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c => { 
+                c.EnableAnnotations();
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "StoreProduct/UserControllers",
+                    Version = "v1",
+                    Description = "API для взаємодії з товарами й юзерами з магазину",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Ivan",
+                        Email = "kogutivan685@gmail.com"
+                    }
+                });
+            });
 
             var app = builder.Build();
 
